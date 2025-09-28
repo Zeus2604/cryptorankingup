@@ -12,24 +12,58 @@
       flex-direction: column;
       align-items: center;
       padding: 20px;
+      min-height: 100vh;
     }
+
     h1 {
       color: #00aaff;
+      margin-bottom: 20px;
+      text-align: center;
     }
+
     .nft-card {
       background-color: #2a2a2a;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 15px;
       margin: 10px;
-      width: 300px;
+      width: 320px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
     }
+
+    .nft-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.5);
+    }
+
     .nft-card h2 {
-      margin: 0;
-      font-size: 1.2em;
+      margin: 0 0 8px 0;
+      font-size: 1.3em;
       color: #ffaa00;
     }
+
     .nft-card p {
-      margin: 5px 0;
+      margin: 4px 0;
+      font-size: 0.95em;
+    }
+
+    .chain {
+      font-weight: bold;
+      color: #00ffcc;
+    }
+
+    .free {
+      color: #00ff00;
+    }
+
+    .paid {
+      color: #ff4444;
+    }
+
+    #nft-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
     }
   </style>
 </head>
@@ -38,8 +72,49 @@
   <div id="nft-container">
     <!-- Aquí aparecerán los NFTs -->
   </div>
+
   <script>
-    // Aquí luego pondremos el código para mostrar los NFTs
+    // Datos de ejemplo de NFTs; luego podremos reemplazar con API real
+    const nftLaunches = [
+      {
+        name: "CryptoPandas",
+        chain: "Ethereum",
+        date: "2025-10-05",
+        price: "0.05 ETH",
+        twitter: "@CryptoPandas"
+      },
+      {
+        name: "BitcoinMonsters",
+        chain: "Bitcoin",
+        date: "2025-10-10",
+        price: "Free",
+        twitter: "@BTCMonsters"
+      },
+      {
+        name: "SolanaCats",
+        chain: "Solana",
+        date: "2025-10-15",
+        price: "0.1 SOL",
+        twitter: "@SolanaCats"
+      }
+    ];
+
+    const container = document.getElementById("nft-container");
+
+    nftLaunches.forEach(nft => {
+      const card = document.createElement("div");
+      card.className = "nft-card";
+
+      card.innerHTML = `
+        <h2>${nft.name}</h2>
+        <p class="chain">Chain: ${nft.chain}</p>
+        <p>Date: ${nft.date}</p>
+        <p>Price: <span class="${nft.price.toLowerCase() === 'free' ? 'free' : 'paid'}">${nft.price}</span></p>
+        <p>Twitter: <a href="https://twitter.com/${nft.twitter.replace('@','')}" target="_blank" style="color:#00aaff;">${nft.twitter}</a></p>
+      `;
+
+      container.appendChild(card);
+    });
   </script>
 </body>
 </html>
