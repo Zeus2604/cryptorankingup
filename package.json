@@ -1,11 +1,11 @@
 {
-  "name": "nft-launches-app",
+  "name": "crypto-launch-app",
   "version": "1.0.0",
-  "description": "Mini-app para ver los próximos lanzamientos de NFTs",
-  "main": "server.js",
+  "description": "MiniApp para ver los próximos lanzamientos y precios de criptomonedas en tiempo real",
+  "main": "api/cryptos.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "node api/cryptos.js"
   },
   "dependencies": {
     "express": "^4.18.2",
