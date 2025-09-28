@@ -142,7 +142,7 @@
           <p>Fecha Lanzamiento: ${nft.launch_date}</p>
           <p>Precio: <span class="${priceClass}">${nft.price}</span></p>
           <p>${nft.description}</p>
-          <p>Twitter: ${nft.twitter ? <a href="${nft.twitter}" target="_blank">Ver en NFTCalendar</a> : "N/A"}</p>
+          <p>Twitter: ${nft.twitter ? `<a href="${nft.twitter}" target="_blank">Ver en NFTCalendar</a>` : "N/A"}</p>
         `;
 
         container.appendChild(card);
