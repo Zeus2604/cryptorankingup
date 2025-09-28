@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Upcoming NFT Launches</title>
+  <title>Lanzamientos NFT Próximos</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -85,7 +85,7 @@
   </style>
 </head>
 <body>
-  <h1>Upcoming NFT Launches</h1>
+  <h1>Lanzamientos NFT Próximos</h1>
   <div id="nft-container">
     <!-- NFTs se cargarán aquí -->
   </div>
@@ -93,96 +93,38 @@
   <script>
     const container = document.getElementById("nft-container");
 
-    // Datos estáticos de próximos NFTs (de nftcalendar.io, al 27 Sep 2025)
+    // Datos estáticos de NFTs próximos (actualizados 27 Sep 2025)
     const nfts = [
-      {
-        name: "X Pro Punks",
-        chain: "XRPL",
-        launch_date: "Sep 29 – Oct 06 2025",
-        price: "Free",
-        description: "Hand-drawn, manually animated, zero-AI, buttery-smooth pixel movement CryptoPunk-style NFTs.",
-        twitter: "https://nftcalendar.io/event/x-pro-punks/" // Link a evento (no X directo)
-      },
-      {
-        name: "Robo Faces",
-        chain: "Ethereum",
-        launch_date: "Sep 29 – Oct 06 2025",
-        price: "Unknown",
-        description: "NFT PFPs with 2048 unique Robo characters, featuring many attributes and cute avatars.",
-        twitter: "https://nftcalendar.io/event/robo-faces/"
-      },
-      {
-        name: "The Unwritten",
-        chain: "Unknown",
-        launch_date: "Sep 29 – Oct 06 2025",
-        price: "Unknown",
-        description: "Collection of 500 unique, handcrafted 3D characters, each a cinematic portrait of heroes, villains, and lost souls.",
-        twitter: "https://nftcalendar.io/event/the-unwritten/"
-      },
-      {
-        name: "Pepe Babes",
-        chain: "Unknown",
-        launch_date: "Sep 30 – Oct 07 2025",
-        price: "Unknown",
-        description: "Hand-drawn NFT collection blending Pepe culture with bold, sassy, and feminine energy, featuring unique traits.",
-        twitter: "https://nftcalendar.io/event/pepe-babes/"
-      },
-      {
-        name: "CryptoSouls",
-        chain: "Ethereum",
-        launch_date: "Sep 30 – Oct 07 2025",
-        price: "Unknown",
-        description: "Collection of 4,444 NFTs focused on artistic exploration of identity, uniquely generated from hundreds of traits.",
-        twitter: "https://nftcalendar.io/event/cryptosouls/"
-      },
-      {
-        name: "HbarApes",
-        chain: "Hedera Hashgraph (HBAR)",
-        launch_date: "Sep 30 – Oct 07 2025",
-        price: "Unknown",
-        description: "Unique pixel art PFP collection with distinctive, pixelated ape faces stored permanently on the blockchain.",
-        twitter: "https://nftcalendar.io/event/hbarapes-hottest-p/"
-      },
       {
         name: "Demon Drip DAO Mint",
         chain: "Hyperliquid",
-        launch_date: "Sep 30 – Oct 07 2025",
-        price: "Unknown",
-
-
-description: "2222 NFTs with 64x64 stunning pixel art, access to exclusive DAO-driven community with revenue share and utilities.",
+        launch_date: "30 Sep – 7 Oct 2025",
+        price: "Desconocido",
+        description: "2222 NFTs con arte pixelado 64x64, acceso a comunidad DAO con reparto de ingresos y utilidades.",
         twitter: "https://nftcalendar.io/event/demon-drip-dao-mint/"
       },
       {
         name: "HederaPunks",
         chain: "Hedera Hashgraph",
-        launch_date: "Sep 30 – Oct 07 2025",
-        price: "Unknown",
-        description: "Unique NFT collection leveraging Hedera Hashgraph for decentralized digital art with sustainable blockchain technology.",
+        launch_date: "30 Sep – 7 Oct 2025",
+        price: "Desconocido",
+        description: "Colección NFT única en Hedera Hashgraph. Únete a la revolución del arte digital descentralizado con tecnología blockchain sostenible.",
         twitter: "https://nftcalendar.io/event/hederapunks/"
       },
       {
         name: "Combat Frogs: Unit",
         chain: "Base (ETH L2)",
-        launch_date: "Sep 30 – Oct 07 2025",
-        price: "WL: 0.004 ETH | Public: 0.005 ETH",
-        description: "5,000-piece hand-curated PFP collection.",
+        launch_date: "30 Sep – 7 Oct 2025",
+        price: "WL: 0.004 ETH | Público: 0.005 ETH",
+        description: "Colección PFP de 5,000 piezas curadas a mano, con utilidades como whitelist, mercancía física y activaciones comunitarias.",
         twitter: "https://nftcalendar.io/event/combat-frogs-unit/"
-      },
-      {
-        name: "Greendale",
-        chain: "Solana",
-        launch_date: "Sep 30 – Oct 07 2025",
-        price: "Unknown",
-        description: "2D multiplayer farming and crafting metaverse, offering true digital ownership.",
-        twitter: "https://nftcalendar.io/event/greendale/"
       }
     ];
 
     // Función para mostrar NFTs
     function displayNFTs() {
       if (nfts.length === 0) {
-        container.innerHTML = "<p>No upcoming NFT launches found.</p>";
+        container.innerHTML = "<p>No se encontraron lanzamientos NFT próximos.</p>";
         return;
       }
 
@@ -190,13 +132,13 @@ description: "2222 NFTs with 64x64 stunning pixel art, access to exclusive DAO-d
         const card = document.createElement("div");
         card.className = "nft-card";
 
-        let priceClass = nft.price.toLowerCase().includes("free") ? "free" : (nft.price.toLowerCase() !== "unknown" ? "paid" : "");
+        let priceClass = nft.price.toLowerCase().includes("gratis") ? "free" : (nft.price.toLowerCase() !== "desconocido" ? "paid" : "");
 
         card.innerHTML = `
           <h2>${nft.name}</h2>
-          <p class="chain">Chain: ${nft.chain}</p>
-          <p>Launch Date: ${nft.launch_date}</p>
-          <p>Price: <span class="${priceClass}">${nft.price}</span></p>
+          <p class="chain">Cadena: ${nft.chain}</p>
+          <p>Fecha Lanzamiento: ${nft.launch_date}</p>
+          <p>Precio: <span class="${priceClass}">${nft.price}</span></p>
           <p>${nft.description}</p>
           <p>Twitter: ${nft.twitter ? <a href="${nft.twitter}" target="_blank">Ver en NFTCalendar</a> : "N/A"}</p>
         `;
