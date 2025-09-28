@@ -132,7 +132,9 @@
         const card = document.createElement("div");
         card.className = "nft-card";
 
-        let priceClass = nft.price.toLowerCase().includes("gratis") ? "free" : (nft.price.toLowerCase() !== "desconocido" ? "paid" : "");
+        let priceClass = nft.price.toLowerCase().includes("gratis") 
+          ? "free" 
+          : (nft.price.toLowerCase() !== "desconocido" ? "paid" : "");
 
         card.innerHTML = `
           <h2>${nft.name}</h2>
@@ -140,7 +142,7 @@
           <p>Fecha Lanzamiento: ${nft.launch_date}</p>
           <p>Precio: <span class="${priceClass}">${nft.price}</span></p>
           <p>${nft.description}</p>
-          <p>Twitter: ${nft.twitter ? <a href="${nft.twitter}" target="_blank">Ver en NFTCalendar</a> : "N/A"}
+          <p>Twitter: ${nft.twitter ? <a href="${nft.twitter}" target="_blank">Ver en NFTCalendar</a> : "N/A"}</p>
         `;
 
         container.appendChild(card);
