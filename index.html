@@ -1,147 +1,92 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Lanzamientos NFT Próximos</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Colección de NFTs</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #1e1e1e, #121212);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      min-height: 100vh;
-    }
-
-    h1 {
-      color: #00aaff;
-      margin-bottom: 25px;
       text-align: center;
-      font-size: 2.5em;
-      text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
     }
-
-    #nft-container {
+    header {
+      background: #222;
+      color: white;
+      padding: 1rem;
+    }
+    h1 {
+      margin: 0;
+    }
+    .nft-container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 15px;
-      width: 100%;
-      max-width: 1200px;
+      margin: 2rem;
     }
-
     .nft-card {
-      background-color: #2a2a2a;
-      border-radius: 12px;
-      padding: 20px;
-      width: 280px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      transition: transform 0.3s, box-shadow 0.3s;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin: 1rem;
+      padding: 1rem;
+      width: 200px;
     }
-
-    .nft-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+    .nft-card img {
+      width: 100%;
+      border-radius: 10px;
     }
-
-    .nft-card h2 {
-      margin: 0 0 10px 0;
-      font-size: 1.4em;
-      color: #ffaa00;
+    .nft-card h3 {
+      margin: 0.5rem 0;
     }
-
     .nft-card p {
-      margin: 5px 0;
-      font-size: 0.95em;
-    }
-
-    .chain {
-      font-weight: bold;
-      color: #00ffcc;
-    }
-
-    .free {
-      color: #00ff00;
-      font-weight: bold;
-    }
-
-    .paid {
-      color: #ff4444;
-      font-weight: bold;
-    }
-
-    a {
-      text-decoration: none;
-      color: #00aaff;
-    }
-
-    @media (max-width: 600px) {
-      .nft-card {
-        width: 90%;
-      }
+      margin: 0.2rem 0;
     }
   </style>
 </head>
 <body>
-  <h1>Lanzamientos NFT Próximos</h1>
-  <div id="nft-container">
-    <!-- NFTs se cargarán aquí -->
+  <header>
+    <h1>Mi Colección de NFTs</h1>
+  </header>
+
+  <div class="nft-container" id="nftContainer">
+    <p>Cargando datos...</p>
   </div>
 
   <script>
-    const container = document.getElementById("nft-container");
+    async function cargarNFTs() {
+      const container = document.getElementById("nftContainer");
+      container.innerHTML = "<p>Cargando datos...</p>";
 
-    async function fetchNFTs() {
       try {
-        const response = await fetch("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest", {
-          method: "GET",
-          headers: {
-            "X-CMC_PRO_API_KEY": "ba3547f6-62b2-4a9a-b83e-867854dd3187",
-            "Accept": "application/json"
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error("Error en la respuesta de CoinMarketCap");
-        }
-
+        // Ahora pedimos a nuestro servidor, no a CoinMarketCap directo
+        const response = await fetch("/api/nfts");
         const data = await response.json();
 
-        // Filtrar solo proyectos relacionados con NFT
-        const nftProjects = data.data.filter(coin => 
-          coin.tags && coin.tags.includes("nft")
-        ).slice(0, 6); // limitar a 6 para no sobrecargar
+        container.innerHTML = "";
 
-        if (nftProjects.length === 0) {
-          container.innerHTML = "<p>No se encontraron lanzamientos NFT próximos.</p>";
-          return;
-        }
-
-        nftProjects.forEach(nft => {
+        data.forEach((nft) => {
           const card = document.createElement("div");
           card.className = "nft-card";
 
           card.innerHTML = `
-            <h2>${nft.name} (${nft.symbol})</h2>
-            <p class="chain">Ranking: ${nft.cmc_rank}</p>
-            <p>Precio: $${nft.quote.USD.price.toFixed(4)}</p>
-            <p>Capitalización: $${nft.quote.USD.market_cap.toLocaleString()}</p>
-            <p>Volumen 24h: $${nft.quote.USD.volume_24h.toLocaleString()}</p>
-            <p><a href="https://coinmarketcap.com/currencies/${nft.slug}/" target="_blank">Ver en CoinMarketCap</a></p>
+            <img src="https://via.placeholder.com/200x200.png?text=${nft.symbol}" alt="${nft.name}" />
+            <h3>${nft.name}</h3>
+            <p><strong>Símbolo:</strong> ${nft.symbol}</p>
+            <p><strong>Precio:</strong> $${nft.quote.USD.price.toFixed(2)}</p>
           `;
 
           container.appendChild(card);
         });
-
       } catch (error) {
-        console.error("Error al obtener datos:", error);
-        container.innerHTML = "<p>Error al cargar los NFTs. Revisa tu API Key.</p>";
+        container.innerHTML = "<p>Error cargando NFTs.</p>";
+        console.error(error);
       }
     }
 
-    fetchNFTs();
+    cargarNFTs();
   </script>
 </body>
 </html>
