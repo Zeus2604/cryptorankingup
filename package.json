@@ -1,0 +1,19 @@
+{
+  "name": "nft-launches-app",
+  "version": "1.0.0",
+  "description": "Mini-app para ver los próximos lanzamientos de NFTs",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.1"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "author": "Almar",
+  "license": "MIT"
+}
