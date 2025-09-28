@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mi Colección de NFTs</title>
+  <title>NFT Launch App - Próximos Lanzamientos</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -48,7 +48,7 @@
 </head>
 <body>
   <header>
-    <h1>Mi Colección de NFTs</h1>
+    <h1>NFT Launch App - Próximos Lanzamientos</h1>
   </header>
 
   <div class="nft-container" id="nftContainer">
@@ -61,9 +61,18 @@
       container.innerHTML = "<p>Cargando datos...</p>";
 
       try {
-        // Ahora pedimos a nuestro servidor, no a CoinMarketCap directo
+        // Llamamos a nuestro servidor en lugar de CoinMarketCap directamente
         const response = await fetch("/api/nfts");
+        if (!response.ok) {
+          throw new Error("No se pudieron cargar los NFTs");
+        }
+
         const data = await response.json();
+
+        if (!data || data.length === 0) {
+          container.innerHTML = "<p>No se encontraron NFTs próximos.</p>";
+          return;
+        }
 
         container.innerHTML = "";
 
@@ -75,7 +84,9 @@
             <img src="https://via.placeholder.com/200x200.png?text=${nft.symbol}" alt="${nft.name}" />
             <h3>${nft.name}</h3>
             <p><strong>Símbolo:</strong> ${nft.symbol}</p>
+            <p><strong>Ranking:</strong> ${nft.cmc_rank}</p>
             <p><strong>Precio:</strong> $${nft.quote.USD.price.toFixed(2)}</p>
+            <p><a href="https://coinmarketcap.com/currencies/${nft.slug}/" target="_blank">Ver en CoinMarketCap</a></p>
           `;
 
           container.appendChild(card);
