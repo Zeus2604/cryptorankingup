@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Launch App - Top Criptomonedas</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; margin:0; padding:0; }
+    header { background: #222; color: white; padding: 1rem; }
+    h1 { margin: 0; }
+    .crypto-container { display: flex; flex-wrap: wrap; justify-content: center; margin: 2rem; }
+    .crypto-card { background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin: 1rem; padding: 1rem; width: 200px; }
+    .crypto-card img { width: 100%; border-radius: 10px; }
+    .crypto-card h3 { margin: 0.5rem 0; }
+    .crypto-card p { margin: 0.2rem 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Crypto Launch App - Top Criptomonedas</h1>
+  </header>
+
+  <div class="crypto-container" id="cryptoContainer">
+    <p>Cargando datos...</p>
+  </div>
+
+  <script>
+    async function cargarCryptos() {
+      const container = document.getElementById("cryptoContainer");
+      container.innerHTML = "<p>Cargando datos...</p>";
+
+      try {
+        const response = await fetch("/api/cryptos");
+        if (!response.ok) throw new Error("No se pudieron cargar las criptomonedas");
+
+        const data = await response.json();
+        if (!data || data.length === 0) {
+          container.innerHTML = "<p>No se encontraron criptomonedas.</p>";
+          return;
+        }
+
+        container.innerHTML = "";
+        data.forEach((coin) => {
+          const card = document.createElement("div");
+          card.className = "crypto-card";
+
+          card.innerHTML = `
+            <h3>${coin.name} (${coin.symbol})</h3>
+            <p><strong>Ranking:</strong> ${coin.cmc_rank}</p>
+            <p><strong>Precio:</strong> $${coin.quote.USD.price.toFixed(2)}</p>
+            <p><strong>Volumen 24h:</strong> $${coin.quote.USD.volume_24h.toLocaleString()}</p>
+            <p><strong>Market Cap:</strong> $${coin.quote.USD.market_cap.toLocaleString()}</p>
+            <p><a href="https://coinmarketcap.com/currencies/${coin.slug}/" target="_blank">Ver en CoinMarketCap</a></p>
+          `;
+          container.appendChild(card);
+        });
+      } catch (error) {
+        container.innerHTML = "<p>Error cargando criptomonedas.</p>";
+        console.error(error);
+      }
+    }
+
+    cargarCryptos();
+  </script>
+</body>
+</html>
