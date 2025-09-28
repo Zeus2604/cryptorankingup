@@ -132,9 +132,7 @@
         const card = document.createElement("div");
         card.className = "nft-card";
 
-        let priceClass = nft.price.toLowerCase().includes("gratis")
-          ? "free"
-          : (nft.price.toLowerCase() !== "desconocido" ? "paid" : "");
+        let priceClass = nft.price.toLowerCase().includes("gratis") ? "free" : (nft.price.toLowerCase() !== "desconocido" ? "paid" : "");
 
         card.innerHTML = `
           <h2>${nft.name}</h2>
