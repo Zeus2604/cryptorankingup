@@ -1,23 +1,26 @@
+<!-- public/crypto.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crypto Launch App - Top Criptomonedas</title>
+  <title>Crypto Launch App - Base Ecosystem</title>
   <style>
     body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; margin:0; padding:0; }
     header { background: #222; color: white; padding: 1rem; }
     h1 { margin: 0; }
     .crypto-container { display: flex; flex-wrap: wrap; justify-content: center; margin: 2rem; }
-    .crypto-card { background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin: 1rem; padding: 1rem; width: 200px; }
-    .crypto-card img { width: 100%; border-radius: 10px; }
-    .crypto-card h3 { margin: 0.5rem 0; }
-    .crypto-card p { margin: 0.2rem 0; }
+    .crypto-card { background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin: 1rem; padding: 1rem; width: 220px; text-align: left; }
+    .crypto-card img { width: 40px; height: 40px; vertical-align: middle; margin-right: 8px; }
+    .crypto-card h3 { margin: 0.5rem 0; font-size: 1.1rem; display: flex; align-items: center; }
+    .crypto-card p { margin: 0.3rem 0; font-size: 0.9rem; }
+    .positive { color: green; font-weight: bold; }
+    .negative { color: red; font-weight: bold; }
   </style>
 </head>
 <body>
   <header>
-    <h1>Crypto Launch App - Top Criptomonedas</h1>
+    <h1>Crypto Launch App - Base Ecosystem</h1>
   </header>
 
   <div class="crypto-container" id="cryptoContainer">
@@ -44,13 +47,27 @@
           const card = document.createElement("div");
           card.className = "crypto-card";
 
+          const price = coin.quote.USD.price?.toFixed(4) || "N/A";
+          const volume = coin.quote.USD.volume_24h?.toLocaleString() || "N/A";
+          const marketCap = coin.quote.USD.market_cap?.toLocaleString() || "N/A";
+          const change = coin.quote.USD.percent_change_24h;
+          const supply = coin.circulating_supply?.toLocaleString() || "N/A";
+
+          const changeClass = change >= 0 ? "positive" : "negative";
+          const changeText = change !== null ? ${change.toFixed(2)}% : "N/A";
+
           card.innerHTML = `
-            <h3>${coin.name} (${coin.symbol})</h3>
-            <p><strong>Ranking:</strong> ${coin.cmc_rank}</p>
-            <p><strong>Precio:</strong> $${coin.quote.USD.price.toFixed(2)}</p>
-            <p><strong>Volumen 24h:</strong> $${coin.quote.USD.volume_24h.toLocaleString()}</p>
-            <p><strong>Market Cap:</strong> $${coin.quote.USD.market_cap.toLocaleString()}</p>
-            <p><a href="https://coinmarketcap.com/currencies/${coin.slug}/" target="_blank">Ver en CoinMarketCap</a></p>
+            <h3>
+              ${coin.image ? <img src="${coin.image}" alt="${coin.symbol}"> : ""}
+              ${coin.name} (${coin.symbol})
+            </h3>
+            <p><strong>Ranking:</strong> ${coin.cmc_rank ?? "N/A"}</p>
+            <p><strong>Precio:</strong> $${price}</p>
+            <p><strong>Cambio 24h:</strong> <span class="${changeClass}">${changeText}</span></p>
+            <p><strong>Volumen 24h:</strong> $${volume}</p>
+            <p><strong>Market Cap:</strong> $${marketCap}</p>
+            <p><strong>Circulating Supply:</strong> ${supply}</p>
+            ${coin.slug ? <p><a href="https://www.coingecko.com/en/coins/${coin.slug}" target="_blank">Ver en CoinGecko</a></p> : ""}
           `;
           container.appendChild(card);
         });
