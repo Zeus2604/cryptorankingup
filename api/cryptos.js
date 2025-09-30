@@ -3,9 +3,6 @@
 
 import express from "express";
 import fetch from "node-fetch";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,11 +14,11 @@ app.use(express.static("public"));
 // Endpoint para obtener las criptomonedas de Base
 app.get("/api/cryptos", async (req, res) => {
   try {
-    // Lista de tokens populares en Base (pueden ajustarse)
+    // Lista de tokens populares en Base (contratos reales)
     const tokens = [
-      { symbol: "cbETH", contract: "0xBeFAaBf..." },
-      { symbol: "USDC", contract: "0xFF970A..." },
-      { symbol: "DAI", contract: "0x6B1754..." },
+      { symbol: "cbETH", contract: "0x4200000000000000000000000000000000000006" },
+      { symbol: "USDC", contract: "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8" },
+      { symbol: "DAI", contract: "0x6b175474e89094c44da98b954eedeac495271d0f" },
     ];
 
     const results = [];
