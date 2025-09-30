@@ -8,6 +8,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const BASESCAN_API_KEY = process.env.BASESCAN_API_KEY;
 
+// DEBUG: verificar si Vercel lee la variable de entorno
+console.log("BASESCAN_API_KEY:", BASESCAN_API_KEY);
+
 // Servir archivos estáticos desde la carpeta public
 app.use(express.static("public"));
 
