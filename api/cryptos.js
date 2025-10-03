@@ -12,7 +12,7 @@ app.use(express.static("public"));
 // Endpoint para obtener criptomonedas de Base
 app.get("/api/cryptos", async (req, res) => {
   try {
-    const url = https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?aux=circulating_supply,market_cap,volume_24h&blockchain_id=8453;
+    const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?aux=circulating_supply,market_cap,volume_24h&blockchain_id=8453`;
     const response = await fetch(url, {
       headers: {
         "X-CMC_PRO_API_KEY": CMC_API_KEY,
