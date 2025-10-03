@@ -1,63 +1,53 @@
 // api/cryptos.js
-// Backend para Crypto Launch App orientada a Base Blockchain usando BaseScan API
-
 import express from "express";
 import fetch from "node-fetch";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const BASESCAN_API_KEY = process.env.BASESCAN_API_KEY;
-
-// DEBUG: verificar si Vercel lee la variable de entorno
-console.log("BASESCAN_API_KEY:", BASESCAN_API_KEY);
+const CMC_API_KEY = process.env.CMC_API_KEY;
 
 // Servir archivos estáticos desde la carpeta public
 app.use(express.static("public"));
 
-// Endpoint para obtener las criptomonedas de Base
+// Endpoint para obtener criptomonedas de Base
 app.get("/api/cryptos", async (req, res) => {
   try {
-    // Lista de tokens populares en Base (contratos reales)
-    const tokens = [
-      { symbol: "cbETH", contract: "0x4200000000000000000000000000000000000006" },
-      { symbol: "USDC", contract: "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8" },
-      { symbol: "DAI", contract: "0x6b175474e89094c44da98b954eedeac495271d0f" },
-    ];
+    const url = https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?aux=circulating_supply,market_cap,volume_24h&blockchain_id=8453;
+    const response = await fetch(url, {
+      headers: {
+        "X-CMC_PRO_API_KEY": CMC_API_KEY,
+      },
+    });
 
-    const results = [];
+    if (!response.ok) throw new Error("Error al conectar con CoinMarketCap");
 
-    // Consultar BaseScan para cada token
-    for (const token of tokens) {
-      const url = https://api.basescan.org/api?module=stats&action=tokeninfo&contractaddress=${token.contract}&apikey=${BASESCAN_API_KEY};
-
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`Error en BaseScan para ${token.symbol}`);
-
-      const data = await response.json();
-
-      results.push({
-        name: token.symbol,
-        symbol: token.symbol,
-        cmc_rank: null,
-        slug: token.symbol.toLowerCase(),
-        circulating_supply: data.result?.circulatingSupply ?? null,
-        image: null,
-        last_updated: new Date().toISOString(),
-        quote: {
-          USD: {
-            price: data.result?.priceUSD ?? null,
-            volume_24h: data.result?.volume24h ?? null,
-            market_cap: data.result?.marketCap ?? null,
-            percent_change_24h: data.result?.percentChange24h ?? null,
-          },
-        },
-      });
+    const data = await response.json();
+    if (!data.data || data.data.length === 0) {
+      throw new Error("No se encontraron criptomonedas en Base");
     }
+
+    const results = data.data.map((coin) => ({
+      name: coin.name,
+      symbol: coin.symbol,
+      cmc_rank: coin.cmc_rank,
+      slug: coin.slug,
+      circulating_supply: coin.circulating_supply,
+      image: null,
+      last_updated: coin.last_updated,
+      quote: {
+        USD: {
+          price: coin.quote.USD.price,
+          volume_24h: coin.quote.USD.volume_24h,
+          market_cap: coin.quote.USD.market_cap,
+          percent_change_24h: coin.quote.USD.percent_change_24h,
+        },
+      },
+    }));
 
     res.json(results);
   } catch (error) {
     console.error("Error al obtener criptomonedas de Base:", error);
-    res.status(500).json({ error: "Error al obtener datos de BaseScan" });
+    res.status(500).json({ error: "Error al obtener datos de CoinMarketCap" });
   }
 });
 
