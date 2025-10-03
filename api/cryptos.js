@@ -1,6 +1,9 @@
 // api/cryptos.js
 import express from "express";
 import fetch from "node-fetch";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,6 +16,7 @@ app.use(express.static("public"));
 app.get("/api/cryptos", async (req, res) => {
   try {
     const url = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=100&convert=USD`;
+
     const response = await fetch(url, {
       headers: {
         "X-CMC_PRO_API_KEY": CMC_API_KEY,
@@ -23,7 +27,7 @@ app.get("/api/cryptos", async (req, res) => {
 
     const data = await response.json();
     if (!data.data || data.data.length === 0) {
-      throw new Error("No se encontraron criptomonedas en Base");
+      throw new Error("No se encontraron criptomonedas");
     }
 
     const results = data.data.map((coin) => ({
@@ -32,7 +36,7 @@ app.get("/api/cryptos", async (req, res) => {
       cmc_rank: coin.cmc_rank,
       slug: coin.slug,
       circulating_supply: coin.circulating_supply,
-      image: null,
+      image: null, // Más adelante agregamos imágenes
       last_updated: coin.last_updated,
       quote: {
         USD: {
@@ -46,7 +50,7 @@ app.get("/api/cryptos", async (req, res) => {
 
     res.json(results);
   } catch (error) {
-    console.error("Error al obtener criptomonedas de Base:", error);
+    console.error("Error al obtener criptomonedas:", error);
     res.status(500).json({ error: "Error al obtener datos de CoinMarketCap" });
   }
 });
