@@ -1,4 +1,4 @@
-<!-- public/crypto.html -->
+<!-- public/index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,8 +10,8 @@
     header { background: #222; color: white; padding: 1rem; }
     h1 { margin: 0; }
     .crypto-container { display: flex; flex-wrap: wrap; justify-content: center; margin: 2rem; }
-    .crypto-card { background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin: 1rem; padding: 1rem; width: 220px; text-align: left; }
-    .crypto-card img { width: 40px; height: 40px; vertical-align: middle; margin-right: 8px; }
+    .crypto-card { background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin: 1rem; padding: 1rem; width: 240px; text-align: left; transition: transform 0.2s ease; }
+    .crypto-card:hover { transform: scale(1.05); }
     .crypto-card h3 { margin: 0.5rem 0; font-size: 1.1rem; display: flex; align-items: center; }
     .crypto-card p { margin: 0.3rem 0; font-size: 0.9rem; }
     .positive { color: green; font-weight: bold; }
@@ -47,27 +47,23 @@
           const card = document.createElement("div");
           card.className = "crypto-card";
 
-          const price = coin.quote.USD.price?.toFixed(4) || "N/A";
-          const volume = coin.quote.USD.volume_24h?.toLocaleString() || "N/A";
-          const marketCap = coin.quote.USD.market_cap?.toLocaleString() || "N/A";
-          const change = coin.quote.USD.percent_change_24h;
+          const price = coin.quote?.USD?.price?.toFixed(4) || "N/A";
+          const volume = coin.quote?.USD?.volume_24h?.toLocaleString() || "N/A";
+          const marketCap = coin.quote?.USD?.market_cap?.toLocaleString() || "N/A";
+          const change = coin.quote?.USD?.percent_change_24h ?? null;
           const supply = coin.circulating_supply?.toLocaleString() || "N/A";
 
           const changeClass = change >= 0 ? "positive" : "negative";
-          const changeText = change !== null ? ${change.toFixed(2)}% : "N/A";
+          const changeText = change !== null ? change.toFixed(2) + "%" : "N/A";
 
           card.innerHTML = `
-            <h3>
-              ${coin.image ? <img src="${coin.image}" alt="${coin.symbol}"> : ""}
-              ${coin.name} (${coin.symbol})
-            </h3>
+            <h3>${coin.name} (${coin.symbol})</h3>
             <p><strong>Ranking:</strong> ${coin.cmc_rank ?? "N/A"}</p>
             <p><strong>Precio:</strong> $${price}</p>
             <p><strong>Cambio 24h:</strong> <span class="${changeClass}">${changeText}</span></p>
             <p><strong>Volumen 24h:</strong> $${volume}</p>
             <p><strong>Market Cap:</strong> $${marketCap}</p>
             <p><strong>Circulating Supply:</strong> ${supply}</p>
-            ${coin.slug ? <p><a href="https://www.coingecko.com/en/coins/${coin.slug}" target="_blank">Ver en CoinGecko</a></p> : ""}
           `;
           container.appendChild(card);
         });
