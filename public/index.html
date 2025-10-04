@@ -8,6 +8,7 @@
 body { font-family: 'Segoe UI', sans-serif; text-align:center; margin:0; padding:0; background:linear-gradient(135deg,#f0f3f7,#d9e2ec); }
 header { background:#1a1f2b; color:#fff; padding:1.2rem 0; box-shadow:0 3px 6px rgba(0,0,0,0.1); }
 header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
+
 .crypto-container { display:flex; flex-wrap:wrap; justify-content:center; margin:2rem; gap:1rem; }
 .crypto-card { background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.08); padding:1rem; width:250px; text-align:left; cursor:pointer; display:flex; flex-direction:column; gap:0.4rem; transition:transform 0.3s ease, box-shadow 0.3s ease; opacity:0; animation:fadeIn 0.6s forwards; }
 .crypto-card:hover { transform:translateY(-5px); box-shadow:0 8px 20px rgba(0,0,0,0.15); }
@@ -16,78 +17,63 @@ header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
 .crypto-card p { margin:0.2rem 0; font-size:0.9rem; }
 .positive { color:#2ecc71; font-weight:bold; }
 .negative { color:#e74c3c; font-weight:bold; }
+
 @keyframes fadeIn { to { opacity:1; } }
+
+/* Modal emergente */
+#infoModal {
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
+}
+#infoModalContent {
+  background:#fff;
+  padding:1.5rem 2rem;
+  border-radius:12px;
+  max-width:400px;
+  text-align:center;
+  font-size:0.95rem;
+}
+#modalOk {
+  margin-top:1rem;
+  background:#2ecc71;
+  color:#fff;
+  border:none;
+  padding:0.6rem 1.2rem;
+  border-radius:50px;
+  cursor:pointer;
+  font-weight:bold;
+  transition:background 0.3s ease;
+}
+#modalOk:hover { background:#27ae60; }
 </style>
 </head>
 <body>
 <header><h1>Crypto Ranking App</h1></header>
-<div class="crypto-container" id="cryptoContainer"><p>Cargando datos...</p></div>
-  <!-- Botón informativo -->
-<div id="infoButton" style="
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  background-color: #2ecc71;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 1000;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-">i</div>
 
-<!-- Modal informativo -->
-<div id="infoModal" style="
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  justify-content: center;
-  align-items: center;
-  z-index: 1001;
-">
-  <div style="
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    max-width: 300px;
-    text-align: center;
-  ">
-    <p>Al hacer click en cualquier tarjeta, serás dirigido a CoinMarketCap para más detalles.</p>
-    <button id="modalOk" style="
-      background-color: #2ecc71;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 16px;
-      cursor: pointer;
-      font-weight: bold;
-    ">OK</button>
+<!-- Modal emergente -->
+<div id="infoModal">
+  <div id="infoModalContent">
+    <p>Al hacer clic en cualquier tarjeta serás dirigido a CoinMarketCap para más detalles sobre esta cripto en especial. Haz clic en "Listo" para volver a esta app.</p>
+    <button id="modalOk">Listo</button>
   </div>
 </div>
 
+<div class="crypto-container" id="cryptoContainer"><p>Cargando datos...</p></div>
+
 <script>
-const infoButton = document.getElementById('infoButton');
+// Mostrar modal al cargar la página
 const infoModal = document.getElementById('infoModal');
 const modalOk = document.getElementById('modalOk');
-
-infoButton.addEventListener('click', () => {
-  infoModal.style.display = 'flex';
-});
-
-modalOk.addEventListener('click', () => {
-  infoModal.style.display = 'none';
-});
+window.addEventListener('load', () => { infoModal.style.display = 'flex'; });
+modalOk.addEventListener('click', () => { infoModal.style.display = 'none'; });
 </script>
+
 <script>
 async function cargarCryptos(){
   const container=document.getElementById("cryptoContainer");
@@ -124,4 +110,4 @@ async function cargarCryptos(){
 cargarCryptos();
 </script>
 </body>
-</html
+</html>
