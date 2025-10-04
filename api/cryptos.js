@@ -16,7 +16,6 @@ app.use(express.static("public"));
 const BASE_SYMBOLS = [
   "BASE", "ETH", "USDT", "USDC", "BNB", "SOL", "DOGE", "TRX", "ADA", "HYPE",
   "LINK", "GRT", "PENDLE", "ENS", "NEXO", "S", "RAY", "RLUSD", "IOTA", "CFX"
-  // 🔹 Ajusta o agrega los símbolos que consideres del ecosistema Base
 ];
 
 app.get("/api/cryptos", async (req, res) => {
@@ -37,17 +36,16 @@ app.get("/api/cryptos", async (req, res) => {
       throw new Error("No se encontraron criptomonedas");
     }
 
-    // 🔹 Filtrar solo criptos del ecosistema Base
-    const baseCoins = data.data.filter(
-      (coin) => BASE_SYMBOLS.includes(coin.symbol)
-    );
+    // Filtrar solo criptos del ecosistema Base
+    const baseCoins = data.data.filter((coin) => BASE_SYMBOLS.includes(coin.symbol));
 
-    // 🔹 Mapear resultados
+    // Mapear resultados con logo y enlace a CoinMarketCap
     const results = baseCoins.map((coin) => ({
       name: coin.name,
       symbol: coin.symbol,
       cmc_rank: coin.cmc_rank,
       slug: coin.slug,
+      cmc_url: `https://coinmarketcap.com/currencies/${coin.slug}/`,
       circulating_supply: coin.circulating_supply,
       image: coin.logo || null,
       last_updated: coin.last_updated,
