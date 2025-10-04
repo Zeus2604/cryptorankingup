@@ -32,7 +32,7 @@ app.get("/api/cryptos", async (req, res) => {
     console.log("Respuesta CoinMarketCap:", JSON.stringify(data, null, 2));
 
     // 🔹 Validación
-    if (!data  !data.data  !data.data.coins || data.data.coins.length === 0) {
+    if (!data || !data.data || !data.data.coins || data.data.coins.length === 0) {
       throw new Error("No se encontraron criptomonedas en Base");
     }
 
