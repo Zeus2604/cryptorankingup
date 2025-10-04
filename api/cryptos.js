@@ -12,14 +12,9 @@ const CMC_API_KEY = process.env.CMC_API_KEY;
 // Servir archivos estáticos desde la carpeta public
 app.use(express.static("public"));
 
-// Definir lista de símbolos de Base para filtrar
-const BASE_SYMBOLS = [
-  "BASE", "ETH", "USDT", "USDC", "BNB", "SOL", "DOGE", "TRX", "ADA", "HYPE",
-  "LINK", "GRT", "PENDLE", "ENS", "NEXO", "S", "RAY", "RLUSD", "IOTA", "CFX"
-];
-
 app.get("/api/cryptos", async (req, res) => {
   try {
+    // Traemos las criptomonedas más recientes desde CoinMarketCap (limit ajustable)
     const url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=200&convert=USD";
 
     const response = await fetch(url, {
@@ -36,11 +31,11 @@ app.get("/api/cryptos", async (req, res) => {
       throw new Error("No se encontraron criptomonedas");
     }
 
-    // Filtrar solo criptos del ecosistema Base
-    const baseCoins = data.data.filter((coin) => BASE_SYMBOLS.includes(coin.symbol));
+    // Ordenar por cmc_rank
+    const sortedCoins = data.data.sort((a, b) => a.cmc_rank - b.cmc_rank);
 
-    // Mapear resultados con logo y enlace a CoinMarketCap
-    const results = baseCoins.map((coin) => ({
+    // Mapear resultados para enviar al front
+    const results = sortedCoins.map((coin) => ({
       name: coin.name,
       symbol: coin.symbol,
       cmc_rank: coin.cmc_rank,
