@@ -68,8 +68,7 @@ header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
 
 <script type="module">
   import { sdk } from 'https://esm.sh/@farcaster/miniapp-sdk';
- import BaseAccountSDK from "https://esm.sh/@base-org/account@latest";
-  import { base } from "https://cdn.jsdelivr.net/npm/viem/chains/+esm";
+  import { createBaseAccountSDK, base } from 'https://esm.sh/@base-org/account';
 
   // Esperar a que la app esté cargada
   window.addEventListener('load', async () => {
@@ -79,10 +78,10 @@ header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
       console.log("Miniapp lista para Base ✅");
 
       // === Integración con Base.dev ===
-     const baseSDK = new BaseAccountSDK({
+      const baseSDK = createBaseAccountSDK({
         appName: "Crypto Ranking App",
         appLogoUrl: "https://cryptorankingup.vercel.app/icon.png",
-        appChainIds: [base.id]
+        appChainIds: [base.constants.CHAIN_IDS.base]
       });
 
       const provider = baseSDK.getProvider();
