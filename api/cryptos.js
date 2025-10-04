@@ -42,7 +42,7 @@ app.get("/api/cryptos", async (req, res) => {
       slug: coin.slug,
       cmc_url: `https://coinmarketcap.com/currencies/${coin.slug}/`,
       circulating_supply: coin.circulating_supply,
-      image: coin.logo || null,
+      image: `https://s2.coinmarketcap.com/static/img/coins/64x64/${coin.id}.png`,
       last_updated: coin.last_updated,
       quote: coin.quote
         ? {
