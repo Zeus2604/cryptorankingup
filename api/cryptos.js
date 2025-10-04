@@ -27,7 +27,9 @@ app.get("/api/cryptos", async (req, res) => {
     if (!response.ok) throw new Error("Error al conectar con CoinMarketCap");
 
     const data = await response.json();
-    if (!data.data  !data.data.coins  data.data.coins.length === 0) {
+
+    // 🔹 Validación corregida
+    if (!data  !data.data  !data.data.coins || data.data.coins.length === 0) {
       throw new Error("No se encontraron criptomonedas en Base");
     }
 
@@ -40,19 +42,21 @@ app.get("/api/cryptos", async (req, res) => {
       circulating_supply: coin.circulating_supply,
       image: coin.logo || null, // Si CoinMarketCap da logo, lo usamos
       last_updated: coin.last_updated,
-      quote: coin.quote ? {
-        USD: {
-          price: coin.quote.USD.price,
-          volume_24h: coin.quote.USD.volume_24h,
-          market_cap: coin.quote.USD.market_cap,
-          percent_change_24h: coin.quote.USD.percent_change_24h,
-        },
-      } : null,
+      quote: coin.quote
+        ? {
+            USD: {
+              price: coin.quote.USD.price,
+              volume_24h: coin.quote.USD.volume_24h,
+              market_cap: coin.quote.USD.market_cap,
+              percent_change_24h: coin.quote.USD.percent_change_24h,
+            },
+          }
+        : null,
     }));
 
     res.json(results);
   } catch (error) {
-    console.error("Error al obtener criptomonedas:", error);
+    console.error("Error al obtener criptomonedas:", error.message);
     res.status(500).json({ error: "Error al obtener datos de CoinMarketCap" });
   }
 });
