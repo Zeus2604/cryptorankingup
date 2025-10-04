@@ -66,15 +66,19 @@ header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
 
 <div class="crypto-container" id="cryptoContainer"><p>Cargando datos...</p></div>
 
-<script>
-// Mostrar modal al cargar la página
+<script type="module">
+import { sdk } from "https://cdn.farcaster.xyz/sdk/mini-app.js";
+
+// Indicar a Farcaster que la app está lista
+sdk.actions.ready();
+
+// Modal emergente
 const infoModal = document.getElementById('infoModal');
 const modalOk = document.getElementById('modalOk');
 window.addEventListener('load', () => { infoModal.style.display = 'flex'; });
 modalOk.addEventListener('click', () => { infoModal.style.display = 'none'; });
-</script>
 
-<script>
+// Cargar criptomonedas
 async function cargarCryptos(){
   const container=document.getElementById("cryptoContainer");
   container.innerHTML="<p>Cargando datos...</p>";
