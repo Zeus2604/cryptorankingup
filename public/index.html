@@ -36,7 +36,7 @@ async function cargarCryptos(){
       const card=document.createElement("div");
       card.className="crypto-card";
       card.onclick=()=>window.open(c.cmc_url||`https://coinmarketcap.com/currencies/${c.slug}/`,"_blank");
-      const price=c.quote?.USD?.price?.toFixed(4)||"N/A";
+      const price = c.quote?.USD?.price?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 }) || "N/A";
       const vol=c.quote?.USD?.volume_24h?.toLocaleString()||"N/A";
       const mc=c.quote?.USD?.market_cap?.toLocaleString()||"N/A";
       const ch=c.quote?.USD?.percent_change_24h??null;
