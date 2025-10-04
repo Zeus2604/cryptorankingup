@@ -64,7 +64,7 @@
 
           card.innerHTML = `
             <h3>
-              ${coin.image ? <img src="${coin.image}" alt="${coin.symbol}"> : ""}
+              ${coin.image ? `<img src="${coin.image}" alt="${coin.symbol}">` : ""}
               ${coin.name} (${coin.symbol})
             </h3>
             <p><strong>Ranking:</strong> ${coin.cmc_rank ?? "N/A"}</p>
