@@ -48,7 +48,7 @@
           const card = document.createElement("div");
           card.className = "crypto-card";
 
-          // Hacer clic en la tarjeta abre la ficha de CoinMarketCap
+          // Hacer la tarjeta clickeable hacia CoinMarketCap
           card.onclick = () => {
             window.open(`https://coinmarketcap.com/currencies/${coin.slug}/`, "_blank");
           };
@@ -62,11 +62,11 @@
           const changeClass = change >= 0 ? "positive" : "negative";
           const changeText = change !== null ? change.toFixed(2) + "%" : "N/A";
 
-          // Logo opcional
-          const logoHTML = coin.image ? `<img src="${coin.image}" alt="${coin.symbol}">` : "";
-
           card.innerHTML = `
-            <h3>${logoHTML}${coin.name} (${coin.symbol})</h3>
+            <h3>
+              ${coin.image ? <img src="${coin.image}" alt="${coin.symbol}"> : ""}
+              ${coin.name} (${coin.symbol})
+            </h3>
             <p><strong>Ranking:</strong> ${coin.cmc_rank ?? "N/A"}</p>
             <p><strong>Precio:</strong> $${price}</p>
             <p><strong>Cambio 24h:</strong> <span class="${changeClass}">${changeText}</span></p>
