@@ -1,89 +1,61 @@
-<!-- public/index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crypto Launch App</title>
-  <style>
-    body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; margin:0; padding:0; }
-    header { background: #222; color: white; padding: 1rem; }
-    h1 { margin: 0; }
-    .crypto-container { display: flex; flex-wrap: wrap; justify-content: center; margin: 2rem; }
-    .crypto-card { background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin: 1rem; padding: 1rem; width: 240px; text-align: left; transition: transform 0.2s ease; cursor: pointer; }
-    .crypto-card:hover { transform: scale(1.05); }
-    .crypto-card h3 { margin: 0.5rem 0; font-size: 1.1rem; display: flex; align-items: center; }
-    .crypto-card img { width: 32px; height: 32px; margin-right: 8px; }
-    .crypto-card p { margin: 0.3rem 0; font-size: 0.9rem; }
-    .positive { color: green; font-weight: bold; }
-    .negative { color: red; font-weight: bold; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Crypto Ranking App</title>
+<style>
+body { font-family: 'Segoe UI', sans-serif; text-align:center; margin:0; padding:0; background:linear-gradient(135deg,#f0f3f7,#d9e2ec); }
+header { background:#1a1f2b; color:#fff; padding:1.2rem 0; box-shadow:0 3px 6px rgba(0,0,0,0.1); }
+header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
+.crypto-container { display:flex; flex-wrap:wrap; justify-content:center; margin:2rem; gap:1rem; }
+.crypto-card { background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.08); padding:1rem; width:250px; text-align:left; cursor:pointer; display:flex; flex-direction:column; gap:0.4rem; transition:transform 0.3s ease, box-shadow 0.3s ease; opacity:0; animation:fadeIn 0.6s forwards; }
+.crypto-card:hover { transform:translateY(-5px); box-shadow:0 8px 20px rgba(0,0,0,0.15); }
+.crypto-card h3 { margin:0; font-size:1.1rem; display:flex; align-items:center; gap:0.5rem; }
+.crypto-card img { width:36px; height:36px; border-radius:50%; background:#f9f9f9; padding:2px; }
+.crypto-card p { margin:0.2rem 0; font-size:0.9rem; }
+.positive { color:#2ecc71; font-weight:bold; }
+.negative { color:#e74c3c; font-weight:bold; }
+@keyframes fadeIn { to { opacity:1; } }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Crypto Launch App</h1>
-  </header>
-
-  <div class="crypto-container" id="cryptoContainer">
-    <p>Cargando datos...</p>
-  </div>
-
-  <script>
-    async function cargarCryptos() {
-      const container = document.getElementById("cryptoContainer");
-      container.innerHTML = "<p>Cargando datos...</p>";
-
-      try {
-        const response = await fetch("/api/cryptos");
-        if (!response.ok) throw new Error("No se pudieron cargar las criptomonedas");
-
-        const data = await response.json();
-        if (!data || data.length === 0) {
-          container.innerHTML = "<p>No se encontraron criptomonedas.</p>";
-          return;
-        }
-
-        container.innerHTML = "";
-        data.forEach((coin) => {
-          const card = document.createElement("div");
-          card.className = "crypto-card";
-
-          // Hacer clickeable hacia la ficha en CoinMarketCap
-          card.onclick = () => {
-            const url = coin.cmc_url || `https://coinmarketcap.com/currencies/${coin.slug}/`;
-            window.open(url, "_blank");
-          };
-
-          const price = coin.quote?.USD?.price?.toFixed(4) || "N/A";
-          const volume = coin.quote?.USD?.volume_24h?.toLocaleString() || "N/A";
-          const marketCap = coin.quote?.USD?.market_cap?.toLocaleString() || "N/A";
-          const change = coin.quote?.USD?.percent_change_24h ?? null;
-          const supply = coin.circulating_supply?.toLocaleString() || "N/A";
-
-          const changeClass = change >= 0 ? "positive" : "negative";
-          const changeText = change !== null ? change.toFixed(2) + "%" : "N/A";
-
-          card.innerHTML = `
-            <h3>
-              ${coin.image ? `<img src="${coin.image}" alt="${coin.symbol}">` : ""}
-              ${coin.name} (${coin.symbol})
-            </h3>
-            <p><strong>Ranking:</strong> ${coin.cmc_rank ?? "N/A"}</p>
-            <p><strong>Precio:</strong> $${price}</p>
-            <p><strong>Cambio 24h:</strong> <span class="${changeClass}">${changeText}</span></p>
-            <p><strong>Volumen 24h:</strong> $${volume}</p>
-            <p><strong>Market Cap:</strong> $${marketCap}</p>
-            <p><strong>Circulating Supply:</strong> ${supply}</p>
-          `;
-          container.appendChild(card);
-        });
-      } catch (error) {
-        container.innerHTML = "<p>Error cargando criptomonedas.</p>";
-        console.error(error);
-      }
-    }
-
-    cargarCryptos();
-  </script>
+<header><h1>Crypto Ranking App</h1></header>
+<div class="crypto-container" id="cryptoContainer"><p>Cargando datos...</p></div>
+<script>
+async function cargarCryptos(){
+  const container=document.getElementById("cryptoContainer");
+  container.innerHTML="<p>Cargando datos...</p>";
+  try{
+    const res=await fetch("/api/cryptos");
+    if(!res.ok)throw new Error("No se pudieron cargar las criptomonedas");
+    const data=await res.json();
+    if(!data?.length){ container.innerHTML="<p>No se encontraron criptomonedas.</p>"; return; }
+    container.innerHTML="";
+    data.forEach((c,i)=>{
+      const card=document.createElement("div");
+      card.className="crypto-card";
+      card.onclick=()=>window.open(c.cmc_url||`https://coinmarketcap.com/currencies/${c.slug}/`,"_blank");
+      const price=c.quote?.USD?.price?.toFixed(4)||"N/A";
+      const vol=c.quote?.USD?.volume_24h?.toLocaleString()||"N/A";
+      const mc=c.quote?.USD?.market_cap?.toLocaleString()||"N/A";
+      const ch=c.quote?.USD?.percent_change_24h??null;
+      const supply=c.circulating_supply?.toLocaleString()||"N/A";
+      const chClass=ch>=0?"positive":"negative";
+      const chText=ch!==null?ch.toFixed(2)+"%":"N/A";
+      card.innerHTML=`<h3>${c.image?`<img src="${c.image}" alt="${c.symbol}">`:""}${c.name} (${c.symbol})</h3>
+<p><strong>Ranking:</strong> ${c.cmc_rank??"N/A"}</p>
+<p><strong>Precio:</strong> $${price}</p>
+<p><strong>Cambio 24h:</strong> <span class="${chClass}">${chText}</span></p>
+<p><strong>Volumen 24h:</strong> $${vol}</p>
+<p><strong>Market Cap:</strong> $${mc}</p>
+<p><strong>Circulating Supply:</strong> ${supply}</p>`;
+      card.style.animationDelay=`${i*0.03}s`;
+      container.appendChild(card);
+    });
+  }catch(e){ container.innerHTML="<p>Error cargando criptomonedas.</p>"; console.error(e); }
+}
+cargarCryptos();
+</script>
 </body>
-</html>
+</html
