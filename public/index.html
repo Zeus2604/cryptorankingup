@@ -13,6 +13,7 @@
     .crypto-card { background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin: 1rem; padding: 1rem; width: 240px; text-align: left; transition: transform 0.2s ease; }
     .crypto-card:hover { transform: scale(1.05); }
     .crypto-card h3 { margin: 0.5rem 0; font-size: 1.1rem; display: flex; align-items: center; }
+    .crypto-card img { width: 32px; height: 32px; margin-right: 8px; }
     .crypto-card p { margin: 0.3rem 0; font-size: 0.9rem; }
     .positive { color: green; font-weight: bold; }
     .negative { color: red; font-weight: bold; }
@@ -57,7 +58,10 @@
           const changeText = change !== null ? change.toFixed(2) + "%" : "N/A";
 
           card.innerHTML = `
-            <h3>${coin.name} (${coin.symbol})</h3>
+            <h3>
+              ${coin.image ? `<img src="${coin.image}" alt="${coin.symbol}">` : ""}
+              ${coin.name} (${coin.symbol})
+            </h3>
             <p><strong>Ranking:</strong> ${coin.cmc_rank ?? "N/A"}</p>
             <p><strong>Precio:</strong> $${price}</p>
             <p><strong>Cambio 24h:</strong> <span class="${changeClass}">${changeText}</span></p>
