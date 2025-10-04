@@ -1,11 +1,11 @@
 {
   "accountAssociation": {
-    "header": "",
-    "payload": "",
-    "signature": ""
+    "header": "eyJmaWQiOjEzNTA0NjMsInR5cGUiOiJhdXRoIiwia2V5IjoiMHhiYkQ3OUZBRWFFN0VkRTUwOURjN0E4MjNCNjNhNEIwYTVjNkQ4NTlmIn0",
+    "payload": "eyJkb21haW4iOiJjcnlwdG9yYW5raW5ndXAudmVyY2VsLmFwcCJ9",
+    "signature": "jWEElGeaUE/FZ7s5wPusJWFDhsl0NrB9Lso3WBSfq9BsCHaw+sXtzuhXo+5Yd1NCdRk38yWFpPr4XNp9LPdJixs="
   },
   "baseBuilder": {
-    "allowedAddresses": [""]
+    "allowedAddresses": ["0xFdcC8561b3E9ffBeb9C04f5971a05Ca73d418C5B"]
   },
   "miniapp": {
     "version": "1",
@@ -14,11 +14,15 @@
     "iconUrl": "https://cryptorankingup.vercel.app/icon.png",
     "splashImageUrl": "https://cryptorankingup.vercel.app/splash.png",
     "splashBackgroundColor": "#1a1f2b",
-    "webhookUrl": "",
+    "webhookUrl": "https://cryptorankingup.vercel.app/api/webhook",
     "subtitle": "Fast, real-time crypto ranking",
     "description": "Mini-app para ver las principales criptomonedas del ecosistema en tiempo real.",
     "screenshotUrls": [],
     "primaryCategory": "finance",
-    "tags": ["crypto","ranking","miniapp"]
+    "tags": [
+      "crypto",
+      "ranking",
+      "miniapp"
+    ]
   }
 }
