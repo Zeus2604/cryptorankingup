@@ -68,9 +68,20 @@ header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
 
 <script type="module">
 import { sdk } from "https://cdn.farcaster.xyz/sdk/mini-app.js";
+  import { createBaseAccountSDK } from "https://cdn.jsdelivr.net/npm/@base-org/account/+esm";
+import { base } from "https://cdn.jsdelivr.net/npm/viem/chains/+esm";
 
 // Indicar a Farcaster que la app está lista
 sdk.actions.ready();
+  // === Integración opcional con Base.dev ===
+const baseSDK = createBaseAccountSDK({
+  appName: "Crypto Ranking App",
+  appLogoUrl: "https://cryptorankingup.vercel.app/icon.png",
+  appChainIds: [base.id]
+});
+
+const provider = baseSDK.getProvider();
+console.log("Proveedor Base conectado:", provider);
 
 // Modal emergente
 const infoModal = document.getElementById('infoModal');
