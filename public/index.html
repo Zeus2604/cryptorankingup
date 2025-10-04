@@ -83,9 +83,12 @@ async function cargarCryptos(){
   const container=document.getElementById("cryptoContainer");
   container.innerHTML="<p>Cargando datos...</p>";
   try{
+    console.log("Intentando cargar criptomonedas...");
     const res=await fetch("/api/cryptos");
+    console.log("Respuesta de fetch:", res);
     if(!res.ok)throw new Error("No se pudieron cargar las criptomonedas");
     const data=await res.json();
+    console.log("Datos recibidos:", data);
     if(!data?.length){ container.innerHTML="<p>No se encontraron criptomonedas.</p>"; return; }
     container.innerHTML="";
     data.forEach((c,i)=>{
