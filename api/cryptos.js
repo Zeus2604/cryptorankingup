@@ -15,7 +15,7 @@ app.use(express.static("public"));
 // Endpoint para obtener criptomonedas de Base
 app.get("/api/cryptos", async (req, res) => {
   try {
-    // ✅ Endpoint de categoría Base Ecosystem (ID 1127 en CMC)
+    // ✅ Endpoint de categoría Base Ecosystem (ID 1127 en CoinMarketCap)
     const url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/category?id=1127";
 
     const response = await fetch(url, {
@@ -28,19 +28,22 @@ app.get("/api/cryptos", async (req, res) => {
 
     const data = await response.json();
 
-    // 🔹 Validación corregida
+    // 👀 DEBUG: imprimir respuesta completa de la API en logs
+    console.log("Respuesta CoinMarketCap:", JSON.stringify(data, null, 2));
+
+    // 🔹 Validación
     if (!data  !data.data  !data.data.coins || data.data.coins.length === 0) {
       throw new Error("No se encontraron criptomonedas en Base");
     }
 
-    // 🔹 CoinMarketCap devuelve los tokens en "data.coins"
+    // 🔹 Mapear resultados
     const results = data.data.coins.map((coin) => ({
       name: coin.name,
       symbol: coin.symbol,
       cmc_rank: coin.cmc_rank,
       slug: coin.slug,
       circulating_supply: coin.circulating_supply,
-      image: coin.logo || null, // Si CoinMarketCap da logo, lo usamos
+      image: coin.logo || null, // Si CoinMarketCap da logo
       last_updated: coin.last_updated,
       quote: coin.quote
         ? {
