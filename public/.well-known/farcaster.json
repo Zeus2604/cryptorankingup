@@ -1,0 +1,24 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "baseBuilder": {
+    "allowedAddresses": [""]
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "Crypto Ranking App",
+    "homeUrl": "https://cryptorankingup.vercel.app/crypto.html",
+    "iconUrl": "https://cryptorankingup.vercel.app/icon.png",
+    "splashImageUrl": "https://cryptorankingup.vercel.app/splash.png",
+    "splashBackgroundColor": "#1a1f2b",
+    "webhookUrl": "",
+    "subtitle": "Fast, real-time crypto ranking",
+    "description": "Mini-app para ver las principales criptomonedas del ecosistema en tiempo real.",
+    "screenshotUrls": [],
+    "primaryCategory": "finance",
+    "tags": ["crypto","ranking","miniapp"]
+  }
+}
