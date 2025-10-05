@@ -4,7 +4,20 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Crypto Ranking App</title>
-  <link rel="icon" type="image/png" href="https://cryptorankingup.vercel.app/icon.png">
+<link rel="icon" type="image/png" href="https://cryptorankingup.vercel.app/icon.png">
+<!-- Meta tag para Farcaster Mini App embed (no afecta funcionalidad existente) -->
+<meta name="fc:miniapp" content='{
+  "version":"1",
+  "imageUrl":"https://cryptorankingup.vercel.app/icon.png",
+  "button":{
+    "title":"Abrir Ranking",
+    "action":{
+      "type":"launch_miniapp",
+      "name":"Crypto Ranking App",
+      "url":"https://cryptorankingup.vercel.app/"
+    }
+  }
+}' />
 <style>
 body { font-family: 'Segoe UI', sans-serif; text-align:center; margin:0; padding:0; background:linear-gradient(135deg,#f0f3f7,#d9e2ec); }
 header { background:#1a1f2b; color:#fff; padding:1.2rem 0; box-shadow:0 3px 6px rgba(0,0,0,0.1); }
@@ -100,7 +113,6 @@ header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
       console.error("Error al inicializar la miniapp:", err);
     }
   });
-
   // === Función para cargar criptomonedas ===
   async function cargarCryptos(){
     const container=document.getElementById("cryptoContainer");
