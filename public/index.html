@@ -18,6 +18,7 @@
     }
   }
 }' />
+<script src="https://esm.sh/@farcaster/miniapp-sdk@0.3.0"></script>
 <style>
 body { font-family: 'Segoe UI', sans-serif; text-align:center; margin:0; padding:0; background:linear-gradient(135deg,#f0f3f7,#d9e2ec); }
 header { background:#1a1f2b; color:#fff; padding:1.2rem 0; box-shadow:0 3px 6px rgba(0,0,0,0.1); }
@@ -81,11 +82,13 @@ header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
 <div class="crypto-container" id="cryptoContainer"><p>Cargando datos...</p></div>
 
 <script type="module">
-  import { sdk } from 'https://esm.sh/@farcaster/miniapp-sdk@0.3.0';
-
-  // Llamar a ready() de inmediato para evitar que la splash screen persista
+  // Llamar a ready() si el SDK está disponible (para Farcaster)
   try {
-    sdk.actions.ready().then(() => console.log("Farcaster SDK ready ✅"));
+    if (window.miniapp && window.miniapp.actions) {
+      window.miniapp.actions.ready().then(() => console.log("Farcaster SDK ready ✅"));
+    } else {
+      console.log("Farcaster SDK not available");
+    }
   } catch (err) {
     console.error("Error calling sdk.actions.ready:", err);
   }
@@ -113,9 +116,9 @@ header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
     try {
       console.log("Intentando cargar criptomonedas...");
       const res = await fetch("/api/cryptos");
-      if (!res.ok) throw new Error("No se pudieron cargar las criptomonedas");
+      if (!res.ok) throw new Error(`No se pudieron cargar las criptomonedas: ${res.status} ${res.statusText}`);
       const data = await res.json();
-      if (!data?.length) {
+      if (!data || !data.length) {
         container.innerHTML = "<p>No se encontraron criptomonedas.</p>";
         return;
       }
@@ -142,7 +145,7 @@ header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
         container.appendChild(card);
       });
     } catch (e) {
-      container.innerHTML = "<p>Error cargando criptomonedas.</p>";
+      container.innerHTML = `<p>Error cargando criptomonedas: ${e.message}</p>`;
       console.error(e);
     }
   }
