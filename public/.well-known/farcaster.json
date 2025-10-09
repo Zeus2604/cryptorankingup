@@ -10,7 +10,7 @@
   "miniapp": {
     "version": "1",
     "name": "Crypto Ranking App",
-    "homeUrl": "https://cryptorankingup.vercel.app/crypto.html",
+    "homeUrl": "https://cryptorankingup.vercel.app/",
     "iconUrl": "https://cryptorankingup.vercel.app/icon.png",
     "splashImageUrl": "https://cryptorankingup.vercel.app/splash.png",
     "splashBackgroundColor": "#1a1f2b",
