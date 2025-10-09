@@ -78,22 +78,21 @@ header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
   </div>
 </div>
 
-<div class="crypto-container" id="cryptoContainer"><p>Cargando datos...</p></div>
+<div class="crypto-container" id="cryptoContainer"></div>
 
 <script type="module">
-  import { sdk } from 'https://esm.sh/@farcaster/miniapp-sdk@0.3.0';
-
-  // Llamar a ready() lo primero, como en Zeus Aprende Inglés
-  window.addEventListener('load', async () => {
+  // Dynamic import for SDK to avoid breaking web if import fails
+  async function initSDK() {
     try {
+      const { sdk } = await import('https://esm.sh/@farcaster/miniapp-sdk@0.3.0');
       await sdk.actions.ready();
       console.log("Farcaster SDK ready ✅");
     } catch (err) {
-      console.error("Error calling sdk.actions.ready:", err);
+      console.log("SDK not available (normal for web), continuing...");
     }
-  });
+  }
 
-  // Cargar la app y datos por separado
+  // Single load listener for app logic
   window.addEventListener('load', async () => {
     try {
       // Mostrar modal inicial
@@ -102,53 +101,60 @@ header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
       infoModal.style.display = 'flex';
       modalOk.addEventListener('click', () => { infoModal.style.display = 'none'; });
 
-      // Cargar criptomonedas
-      await cargarCryptos();
-    } catch (err) {
-      console.error("Error al inicializar la miniapp:", err);
-    }
-  });
-
-  // Función para cargar criptomonedas
-  async function cargarCryptos() {
-    const container = document.getElementById("cryptoContainer");
-    container.innerHTML = "<p>Cargando datos...</p>";
-    try {
-      console.log("Intentando cargar criptomonedas...");
+      // Cargar y renderizar datos
+      const container = document.getElementById("cryptoContainer");
+      container.innerHTML = "<p>Cargando datos...</p>";
+      console.log("Iniciando carga de datos...");
+      
       const res = await fetch("/api/cryptos");
-      if (!res.ok) throw new Error(`No se pudieron cargar las criptomonedas: ${res.status} ${res.statusText}`);
+      if (!res.ok) throw new Error(`Error en fetch: ${res.status} ${res.statusText}`);
+      
       const data = await res.json();
+      console.log("Datos recibidos:", data.length, "items");
+      
       if (!data || !data.length) {
         container.innerHTML = "<p>No se encontraron criptomonedas.</p>";
         return;
       }
+      
       container.innerHTML = "";
       data.forEach((c, i) => {
-        const card = document.createElement("div");
-        card.className = "crypto-card";
-        card.onclick = () => window.open(c.cmc_url || `https://coinmarketcap.com/currencies/${c.slug}/`, "_blank");
-        const price = c.quote?.USD?.price?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 }) || "N/A";
-        const vol = c.quote?.USD?.volume_24h?.toLocaleString() || "N/A";
-        const mc = c.quote?.USD?.market_cap?.toLocaleString() || "N/A";
-        const ch = c.quote?.USD?.percent_change_24h ?? null;
-        const supply = c.circulating_supply?.toLocaleString() || "N/A";
-        const chClass = ch >= 0 ? "positive" : "negative";
-        const chText = ch !== null ? ch.toFixed(2) + "%" : "N/A";
-        card.innerHTML = `<h3>${c.image ? `<img src="${c.image}" alt="${c.symbol}">` : ""}${c.name} (${c.symbol})</h3>
+        try {
+          console.log("Renderizando:", c.name);
+          const card = document.createElement("div");
+          card.className = "crypto-card";
+          card.onclick = () => window.open(c.cmc_url || `https://coinmarketcap.com/currencies/${c.slug}/`, "_blank");
+          const price = (c.quote?.USD?.price || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+          const vol = (c.quote?.USD?.volume_24h || 0).toLocaleString();
+          const mc = (c.quote?.USD?.market_cap || 0).toLocaleString();
+          const ch = c.quote?.USD?.percent_change_24h ?? 0;
+          const supply = (c.circulating_supply || 0).toLocaleString();
+          const chClass = ch >= 0 ? "positive" : "negative";
+          const chText = ch !== null ? ch.toFixed(2) + "%" : "N/A";
+          card.innerHTML = `<h3>${c.image ? `<img src="${c.image}" alt="${c.symbol}">` : ""} ${c.name} (${c.symbol})</h3>
 <p><strong>Ranking:</strong> ${c.cmc_rank ?? "N/A"}</p>
 <p><strong>Precio:</strong> $${price}</p>
 <p><strong>Cambio 24h:</strong> <span class="${chClass}">${chText}</span></p>
 <p><strong>Volumen 24h:</strong> $${vol}</p>
 <p><strong>Market Cap:</strong> $${mc}</p>
 <p><strong>Circulating Supply:</strong> ${supply}</p>`;
-        card.style.animationDelay = `${i * 0.03}s`;
-        container.appendChild(card);
+          card.style.animationDelay = `${i * 0.03}s`;
+          container.appendChild(card);
+        } catch (cardErr) {
+          console.error("Error rendering card for", c.name, cardErr);
+        }
       });
-    } catch (e) {
-      container.innerHTML = `<p>Error cargando criptomonedas: ${e.message}</p>`;
-      console.error(e);
+
+      // Llamar SDK ready DESPUÉS de renderizar (per docs: after app loaded)
+      await initSDK();
+    } catch (err) {
+      const container = document.getElementById("cryptoContainer");
+      container.innerHTML = `<p>Error cargando criptomonedas: ${err.message}</p>`;
+      console.error("Error general:", err);
+      // Still try SDK
+      await initSDK();
     }
-  }
+  });
 </script>
 </body>
 </html>
