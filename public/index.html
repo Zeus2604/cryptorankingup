@@ -81,20 +81,10 @@ header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
 
 <div class="crypto-container" id="cryptoContainer"></div>
 
+<!-- SDK Farcaster + Lógica -->
 <script type="module">
-  // Dynamic import for SDK to avoid breaking web if import fails
-  async function initSDK() {
-    try {
-      const module = await import('https://cdn.jsdelivr.net/npm/@farcaster/miniapp-sdk@0.3.0/dist/index.min.js');
-      const sdk = module.sdk || module.default;
-      await sdk.actions.ready();
-      console.log("Farcaster SDK ready ✅");
-    } catch (err) {
-      console.log("SDK not available (normal for web), continuing...");
-    }
-  }
+  import { sdk } from 'https://esm.sh/@farcaster/miniapp-sdk';
 
-  // Single load listener for app logic
   window.addEventListener('load', async () => {
     try {
       const infoModal = document.getElementById('infoModal');
@@ -102,61 +92,50 @@ header h1 { margin:0; font-size:2rem; letter-spacing:1px; }
       infoModal.style.display = 'flex';
       modalOk.addEventListener('click', () => { infoModal.style.display = 'none'; });
 
-      // Cargar y renderizar datos
       const container = document.getElementById("cryptoContainer");
       container.innerHTML = "<p>Cargando datos...</p>";
-      console.log("Iniciando carga de datos...");
 
       const res = await fetch("/api/cryptos");
       if (!res.ok) throw new Error(`Error en fetch: ${res.status} ${res.statusText}`);
 
       const data = await res.json();
-      console.log("Datos recibidos:", data.length, "items");
-
-      if (!data || !data.length) {
-        container.innerHTML = "<p>No se encontraron criptomonedas.</p>";
-        return;
-      }
-
       container.innerHTML = "";
+
       data.forEach((c, i) => {
-        try {
-          const card = document.createElement("div");
-          card.className = "crypto-card";
-          card.onclick = () => window.open(`https://coinmarketcap.com/currencies/${c.slug}/`, "_blank");
+        const card = document.createElement("div");
+        card.className = "crypto-card";
+        card.onclick = () => window.open(`https://coinmarketcap.com/currencies/${c.slug}/`, "_blank");
 
-          const price = (c.quote?.USD?.price || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 });
-          const vol = (c.quote?.USD?.volume_24h || 0).toLocaleString();
-          const mc = (c.quote?.USD?.market_cap || 0).toLocaleString();
-          const ch = c.quote?.USD?.percent_change_24h ?? 0;
-          const supply = (c.circulating_supply || 0).toLocaleString();
-          const chClass = ch >= 0 ? "positive" : "negative";
-          const chText = ch !== null ? ch.toFixed(2) + "%" : "N/A";
+        const price = (c.quote?.USD?.price || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+        const vol = (c.quote?.USD?.volume_24h || 0).toLocaleString();
+        const mc = (c.quote?.USD?.market_cap || 0).toLocaleString();
+        const ch = c.quote?.USD?.percent_change_24h ?? 0;
+        const supply = (c.circulating_supply || 0).toLocaleString();
+        const chClass = ch >= 0 ? "positive" : "negative";
+        const chText = ch !== null ? ch.toFixed(2) + "%" : "N/A";
 
-          card.innerHTML = `
-            <h3>${c.image ? `<img src="${c.image}" alt="${c.symbol}">` : ""} ${c.name} (${c.symbol})</h3>
-            <p><strong>Ranking:</strong> ${c.cmc_rank ?? "N/A"}</p>
-            <p><strong>Precio:</strong> $${price}</p>
-            <p><strong>Cambio 24h:</strong> <span class="${chClass}">${chText}</span></p>
-            <p><strong>Volumen 24h:</strong> $${vol}</p>
-            <p><strong>Market Cap:</strong> $${mc}</p>
-            <p><strong>Circulating Supply:</strong> ${supply}</p>
-          `;
+        card.innerHTML = `
+          <h3><img src="${c.image}" alt="${c.symbol}"> ${c.name} (${c.symbol})</h3>
+          <p><strong>Ranking:</strong> ${c.cmc_rank ?? "N/A"}</p>
+          <p><strong>Precio:</strong> $${price}</p>
+          <p><strong>Cambio 24h:</strong> <span class="${chClass}">${chText}</span></p>
+          <p><strong>Volumen 24h:</strong> $${vol}</p>
+          <p><strong>Market Cap:</strong> $${mc}</p>
+          <p><strong>Circulating Supply:</strong> ${supply}</p>
+        `;
 
-          card.style.animationDelay = `${i * 0.03}s`;
-          container.appendChild(card);
-        } catch (cardErr) {
-          console.error("Error rendering card for", c.name, cardErr);
-        }
+        card.style.animationDelay = `${i * 0.03}s`;
+        container.appendChild(card);
       });
 
-      // Llamar SDK ready después de renderizar
-      await initSDK();
+      // Llamar ready() de forma directa
+      await sdk.actions.ready();
+      console.log("✅ Crypto Ranking Miniapp lista para Base.dev");
     } catch (err) {
       const container = document.getElementById("cryptoContainer");
       container.innerHTML = `<p>Error cargando criptomonedas: ${err.message}</p>`;
-      console.error("Error general:", err);
-      await initSDK();
+      console.error("❌ Error general:", err);
+      try { await sdk.actions.ready(); } catch {}
     }
   });
 </script>
